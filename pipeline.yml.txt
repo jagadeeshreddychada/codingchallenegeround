@@ -1,0 +1,44 @@
+# pipeline for deploying terraform configuration in our repository
+# Repositoryname : codingchallenge
+---
+
+trigger:
+- main
+
+pool:
+  name: Azure-Pipelines
+  vmImage: ubuntu-latest
+
+resources:
+  repositories:
+    - repository: codingchallenge
+      type: git
+
+- task: TerraformInstaller@0
+  inputs:
+    terraformVersion: 'latest'
+
+- task: TerraformTaskV3@3
+  inputs:
+    provider: 'azurerm'
+    command: 'init'
+    workingDirectory: 'codingchallenge'
+    backendServiceRm: 'pay-As-you-go'
+    backendAzureRmResourceGroupName: myrg1
+    backendAzureRmStorageAccountName: mystorageacc1
+    backendAzureRmContainerName: mycontainer1
+    backendAzureRmkey: 'terraform.tfstate'
+
+- task: TerraformTaskV3@3
+  inputs:
+    provider: 'azurerm'
+    command: 'plan'
+    backendServiceRm: 'pay-As-you-go'
+
+- task: TerraformTaskV3@3
+  inputs:
+    provider: 'azurerm'
+    command: 'apply'
+
+...
+
