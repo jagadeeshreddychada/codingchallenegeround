@@ -22,7 +22,7 @@ resources:
   inputs:
     provider: 'azurerm'
     command: 'init'
-    workingDirectory: 'codingchallenge'
+    workingDirectory: '$(system.DefaultorkingDirectory)/codingchallenge/'
     backendServiceRm: 'pay-As-you-go'
     backendAzureRmResourceGroupName: myrg1
     backendAzureRmStorageAccountName: mystorageacc1
@@ -34,11 +34,13 @@ resources:
     provider: 'azurerm'
     command: 'plan'
     backendServiceRm: 'pay-As-you-go'
+    workingDirectory: '$(system.DefaultorkingDirectory)/codingchallenge/'
 
 - task: TerraformTaskV3@3
   inputs:
     provider: 'azurerm'
     command: 'apply'
-
+    workingDirectory: '$(system.DefaultorkingDirectory)/codingchallenge/'
+    commandOptions: '-auto-approve'
 ...
 
